@@ -12,8 +12,9 @@ class udpTools():
         self.max_attempts = 3
         self.encoding = 'utf-8'
         self.server_data = {
-            "address": ("192.168.56.1", 20001),
+            # "address": ("192.168.56.1", 20001),
             # "address": ("127.0.0.1", 20001),
+            "address": ("10.0.0.3", 20001),
             # "buffer": 8192
             "buffer": 1024
         }
@@ -165,12 +166,11 @@ class updServer(udpTools):
         message = None
         data = b''
         self.UDPSocket.bind(self.server_data['address'])
+        print("Server bound on: %s:%s" % self.server_data['address'])
         while(self.EOF_MSG != message):
             bytesAddressPair = self.recieveData()
             message = bytesAddressPair[0]
             address = bytesAddressPair[1]
-            # Sending a reply to client
-            self.sendData(self.ACK_MSG, address)
             if self.file is None:
                 self.file = os.path.join(self.resource_path, self.decode(message))
                 start_time = time.time()
@@ -182,7 +182,8 @@ class updServer(udpTools):
             else:
                 data += message
                 self.printProgress()
-
+            # Sending a reply to client
+            self.sendData(self.ACK_MSG, address)
         data = data.strip(self.EOF_MSG)
         f=open(self.file, "wb")
         f.write(data)

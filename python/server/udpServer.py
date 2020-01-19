@@ -20,6 +20,7 @@ def udpServerSimpleTest():
     # Create a UDP socket at client side
     server.createUpdSocket()
     server.UDPSocket.bind(server.server_data['address'])
+    print("Server bound on: %s:%s" % server.server_data['address'])
     while(True):
       data = server.recieveData()[0]
       if data == server.EOF_MSG:
@@ -29,5 +30,5 @@ def udpServerSimpleTest():
 
 
 if __name__== "__main__":
-  # udpServerTest()
-  udpServerSimpleTest()
+  udpServerTest()
+  # udpServerSimpleTest()
