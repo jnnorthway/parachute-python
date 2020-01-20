@@ -169,8 +169,16 @@ class updServer(udpTools):
         print("Server bound on: %s:%s" % self.server_data['address'])
         while(self.EOF_MSG != message):
             bytesAddressPair = self.recieveData()
+            dpId = bytesAddressPair[0]
+            bytesAddressPair = self.recieveData()
+            self.msg_received -= 1
             message = bytesAddressPair[0]
             address = bytesAddressPair[1]
+            if int(dpId) != self.msg_sent:
+                print("\nclient id: %s != server id: %d" % (dpId, self.msg_sent))
+                self.msg_sent -= 1
+                self.sendData(self.ACK_MSG, address)
+                continue
             if self.file is None:
                 self.file = os.path.join(self.resource_path, self.decode(message))
                 start_time = time.time()
