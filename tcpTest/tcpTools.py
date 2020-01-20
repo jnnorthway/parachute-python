@@ -169,7 +169,7 @@ class tcpServer(tcpTools):
         self.TCPSocket.listen(1)
         print("Server listening on: %s:%s" % self.server_data['address'])
         self.connection, addr = self.TCPSocket.accept()
-        while(self.EOF_MSG != message):
+        while(True):
             message = self.recieveData()
             if self.file is None:
                 self.file = os.path.join(self.resource_path, self.decode(message))
@@ -183,6 +183,8 @@ class tcpServer(tcpTools):
             else:
                 data += message
                 self.printProgress()
+                if len(data) >= self.file_size:
+                    break
         data = data.strip(self.EOF_MSG)
         f=open(self.file, "wb")
         f.write(data)
