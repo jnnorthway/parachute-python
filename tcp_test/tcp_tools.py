@@ -4,7 +4,7 @@ import sys
 import time
 
 
-class tcpTools:
+class tcp_tools:
     def __init__(self):
         self.ACK_MSG = b"<ACK>"
         self.EOF_MSG = b"<EOF>"
@@ -76,7 +76,7 @@ class tcpTools:
         return data.decode(self.encoding)
 
 
-class tcpClient(tcpTools):
+class tcp_client(tcp_tools):
     def __init__(self, file_path):
         super().__init__()
         self.fileInfo(file_path)
@@ -127,7 +127,7 @@ class tcpClient(tcpTools):
         self.TCPSocket.close()
 
 
-class tcpServer(tcpTools):
+class tcp_server(tcp_tools):
     def __init__(self):
         self.resource_path = "resources"
         super().__init__()
@@ -156,12 +156,12 @@ class tcpServer(tcpTools):
         data = b""
         self.TCPSocket.bind(self.server_data["address"])
         self.TCPSocket.listen(1)
-        print("Server listening on: %s:%s" % self.server_data['address'])
+        print("Server listening on: %s:%s" % self.server_data["address"])
         self.connection = self.TCPSocket.accept()[0]
-        while(True):
+        while True:
             message = self.recieveData()
             if self.file is None:
-                self.file = os.path.join(self.resource_path, self.decode(message),)
+                self.file = os.path.join(self.resource_path, self.decode(message))
                 start_time = time.time()
                 self.sendData(self.ACK_MSG)
                 print("receiving file: %s" % self.file)
@@ -174,7 +174,7 @@ class tcpServer(tcpTools):
                 self.printProgress()
                 if len(data) >= self.file_size:
                     break
-        f=open(self.file, "wb")
+        f = open(self.file, "wb")
         f.write(data)
         print("\nFile written: %s" % self.file)
         f.close()

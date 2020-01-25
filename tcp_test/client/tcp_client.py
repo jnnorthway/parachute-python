@@ -1,18 +1,14 @@
-import os
-import sys
-
-from tcpTools import tcpClient
-
-sys.path.append(os.path.abspath(".."))
+"""Test application for tcp client."""
+from tcpTools import tcp_client
 
 FILE = "resources/clientdata.txt"
 FILE = "resources/bird.jpg"
 # FILE = 'resources/tb1.pdf'
 
 
-def tcpClientTest():
+def tcp_client_test():
     """TCP client function"""
-    client = tcpClient(FILE)
+    client = tcp_client(FILE)
     client.printFileInfo()
     # Create a TCP socket at client side
     client.createTcpSocket()
@@ -20,9 +16,9 @@ def tcpClientTest():
     client.close()
 
 
-def tcpClientSimpleTest():
+def tcp_client_simple_test():
     """TCP client function"""
-    client = tcpClient(FILE)
+    client = tcp_client(FILE)
     # Create a TCP socket at client side
     client.createTcpSocket()
     print("sending Hello")
@@ -31,5 +27,5 @@ def tcpClientSimpleTest():
 
 
 if __name__ == "__main__":
-    tcpClientTest()
-#   tcpClientSimpleTest()
+    tcp_client_test()
+    # tcp_client_simple_test()
