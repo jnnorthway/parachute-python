@@ -168,7 +168,7 @@ class tcpServer(tcpTools):
         self.TCPSocket.bind(self.server_data['address'])
         self.TCPSocket.listen(1)
         print("Server listening on: %s:%s" % self.server_data['address'])
-        self.connection, addr = self.TCPSocket.accept()
+        self.connection = self.TCPSocket.accept()[0]
         while(True):
             message = self.recieveData()
             if self.file is None:
@@ -185,7 +185,6 @@ class tcpServer(tcpTools):
                 self.printProgress()
                 if len(data) >= self.file_size:
                     break
-        data = data.strip(self.EOF_MSG)
         f=open(self.file, "wb")
         f.write(data)
         print("\nFile written: %s" % self.file)
