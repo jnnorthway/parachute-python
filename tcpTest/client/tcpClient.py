@@ -1,11 +1,12 @@
 import os
 import sys
-import socket
-sys.path.append(os.path.abspath(".."))
+
 from tcpTools import tcpClient
 
-FILE = 'resources/clientdata.txt'
-FILE = 'resources/bird.jpg'
+sys.path.append(os.path.abspath(".."))
+
+FILE = "resources/clientdata.txt"
+FILE = "resources/bird.jpg"
 # FILE = 'resources/tb1.pdf'
 
 
@@ -24,11 +25,11 @@ def tcpClientSimpleTest():
     client = tcpClient(FILE)
     # Create a TCP socket at client side
     client.createTcpSocket()
-    print('sending Hello')
-    client.sendData(b'Hello')
+    print("sending Hello")
+    client.sendData(b"Hello")
     client.close()
 
 
-if __name__== "__main__":
-  tcpClientTest()
+if __name__ == "__main__":
+    tcpClientTest()
 #   tcpClientSimpleTest()

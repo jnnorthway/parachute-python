@@ -1,10 +1,11 @@
 import os
 import sys
-import socket
-sys.path.append(os.path.abspath(".."))
+
 from udpTools import updClient
 
-FILE = 'resources/clientdata.txt'
+sys.path.append(os.path.abspath(".."))
+
+FILE = "resources/clientdata.txt"
 # FILE = '/mnt/sf_VM_Coding/textbook3.pdf'
 # FILE = '/home/jnorthway/Downloads/bird.jpg'
 
@@ -24,11 +25,11 @@ def udpClientSimpleTest():
     client = updClient(FILE)
     # Create a UDP socket at client side
     client.createUpdSocket()
-    print('sending Hello')
-    client.sendRawData(b'Hello')
+    print("sending Hello")
+    client.sendRawData(b"Hello")
     client.close()
 
 
-if __name__== "__main__":
-  # udpClientTest()
-  udpClientSimpleTest()
+if __name__ == "__main__":
+    # udpClientTest()
+    udpClientSimpleTest()
