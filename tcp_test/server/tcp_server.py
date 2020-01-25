@@ -1,23 +1,19 @@
-import os
-import sys
-
-from tcpTools import tcpServer
-
-sys.path.append(os.path.abspath(".."))
+"""Test application for tcp server."""
+from tcp_tools import tcp_server
 
 
-def tcpServerTest():
-    """TCP server function"""
-    server = tcpServer()
+def tcp_server_test():
+    """TCP server test function"""
+    server = tcp_server()
     # Create a TCP socket at client side
     server.createTcpSocket()
     server.receiveFile()
     server.close()
 
 
-def tcpServerSimpleTest():
-    """TCP server function"""
-    server = tcpServer()
+def tcp_server_simple_test():
+    """TCP server test function"""
+    server = tcp_server()
     # Create a TCP socket at client side
     server.createUpdSocket()
     server.TCPSocket.bind(server.server_data["address"])
@@ -31,5 +27,5 @@ def tcpServerSimpleTest():
 
 
 if __name__ == "__main__":
-    tcpServerTest()
-    # tcpServerSimpleTest()
+    tcp_server_test()
+    # tcp_server_simple_test()

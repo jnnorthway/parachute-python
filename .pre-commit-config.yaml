@@ -62,11 +62,11 @@ repos:
     rev: v4.3.21
     hooks:
     -   id: isort
-# -   repo: https://github.com/pre-commit/mirrors-pylint
-#     rev: v2.3.1
-#     hooks:
-#     -   id: pylint
-#         args:
-#         - --max-line-length=80
-#         - --ignore-imports=yes
-#         - -d duplicate-code
+-   repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v2.3.1
+    hooks:
+    -   id: pylint
+        args:
+        - --max-line-length=100
+        - --ignore-imports=yes
+        - -d duplicate-code
