@@ -1,4 +1,7 @@
 """Test application for tcp client."""
+import os
+import sys
+sys.path.append(os.path.abspath(".."))
 from tcp_tools import TcpClient
 
 FILE = "resources/clientdata.txt"
