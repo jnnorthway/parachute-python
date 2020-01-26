@@ -69,4 +69,9 @@ repos:
         args:
         - --max-line-length=100
         - --ignore-imports=yes
+        - --disable=invalid-name
+        - --disable=import-error
+        - --disable=too-many-instance-attributes
+        - --disable=no-self-use
+        - --disable=broad-except
         - -d duplicate-code
