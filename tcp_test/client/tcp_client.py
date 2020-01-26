@@ -6,7 +6,6 @@ from tcp_tools import TcpClient
 
 FILE = "resources/clientdata.txt"
 FILE = "resources/bird.jpg"
-# FILE = 'resources/tb1.pdf'
 
 def get_address():
     ip = input("Address: ")
