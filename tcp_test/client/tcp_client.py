@@ -8,11 +8,15 @@ FILE = "resources/clientdata.txt"
 FILE = "resources/bird.jpg"
 # FILE = 'resources/tb1.pdf'
 
+def get_address():
+    ip = input("Address: ")
+    return ip
 
 def tcp_client_test():
     """TCP client function"""
     client = TcpClient(FILE)
     client.printFileInfo()
+    client.set_ip(get_address())
     # Create a TCP socket at client side
     client.createTcpSocket()
     client.sendFile()
@@ -22,6 +26,7 @@ def tcp_client_test():
 def tcp_client_simple_test():
     """TCP client function"""
     client = TcpClient(FILE)
+    client.set_ip(get_address())
     # Create a TCP socket at client side
     client.createTcpSocket()
     print("sending Hello")
