@@ -1,10 +1,13 @@
 """Test application for tcp server."""
-from tcp_tools import tcp_server
+import os
+import sys
+sys.path.append(os.path.abspath(".."))
+from tcp_tools import TcpServer
 
 
 def tcp_server_test():
     """TCP server test function"""
-    server = tcp_server()
+    server = TcpServer()
     # Create a TCP socket at client side
     server.createTcpSocket()
     server.receiveFile()
@@ -13,7 +16,7 @@ def tcp_server_test():
 
 def tcp_server_simple_test():
     """TCP server test function"""
-    server = tcp_server()
+    server = TcpServer()
     # Create a TCP socket at client side
     server.createUpdSocket()
     server.TCPSocket.bind(server.server_data["address"])

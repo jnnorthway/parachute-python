@@ -1,10 +1,13 @@
+"""Tool set for python tcp client and server."""
 import os
 import socket
 import sys
 import time
 
 
-class tcp_tools:
+class TcpTools:
+    """Tcp tool class."""
+
     def __init__(self):
         self.ACK_MSG = b"<ACK>"
         self.EOF_MSG = b"<EOF>"
@@ -28,6 +31,7 @@ class tcp_tools:
         self.progress = 0
 
     def printProgress(self):
+        """Print progress of send/recieve."""
         progress_str = "\rProgress: [%s] %s"
         columns = int(os.popen("stty size", "r").read().split()[1])
         columns -= len(progress_str)
@@ -43,6 +47,7 @@ class tcp_tools:
         sys.stdout.write(progress_str % (percent_buffer, format_percent))
 
     def clearProgress(self):
+        """Clear progress of send/recieve."""
         columns = int(os.popen("stty size", "r").read().split()[1])
         buffer = "\r"
         for _ in range(columns):
@@ -51,6 +56,7 @@ class tcp_tools:
         sys.stdout.write(buffer)
 
     def createTcpSocket(self):
+        """Create tcp socket."""
         if self.TCPSocket is None:
             print("Creating socket.")
             self.TCPSocket = socket.socket(
@@ -58,30 +64,37 @@ class tcp_tools:
             )
 
     def printFileInfo(self):
+        """Print info of file."""
         self.fileInfo(self.file)
         print("file path: %s" % self.file)
         print("file size: %d bytes" % self.file_size)
 
     def fileInfo(self, file_path):
+        """Get info of file"""
         self.file = file_path
         self.fileName()
         if self.file_size == 0:
-            self.file_stats = os.stat(self.file)
-            self.file_size = self.file_stats.st_size
+            file_stats = os.stat(self.file)
+            self.file_size = file_stats.st_size
 
     def fileName(self):
+        """Set file name."""
         self.file_name = os.path.split(self.file)[1]
 
     def decode(self, data):
+        """Decode data."""
         return data.decode(self.encoding)
 
 
-class tcp_client(tcp_tools):
+class TcpClient(TcpTools):
+    """Tcp client class."""
+
     def __init__(self, file_path):
         super().__init__()
         self.fileInfo(file_path)
 
     def recieveData(self):
+        """Receive tcp data."""
         assert self.TCPSocket, "No socket available."
         try:
             data = self.TCPSocket.recv(self.server_data["buffer"])
@@ -91,6 +104,7 @@ class tcp_client(tcp_tools):
         return data
 
     def sendData(self, data):
+        """Send tcp data."""
         assert self.TCPSocket, "No socket available."
         if isinstance(data, int):
             data = str(data)
@@ -102,6 +116,7 @@ class tcp_client(tcp_tools):
         self.progress += 1
 
     def sendFile(self):
+        """Send a file."""
         start_time = time.time()
         self.createTcpSocket()
         self.TCPSocket.connect(self.server_data["address"])
@@ -124,15 +139,19 @@ class tcp_client(tcp_tools):
         print("Send time: %f" % (time.time() - start_time))
 
     def close(self):
+        """Close tcp connection."""
         self.TCPSocket.close()
 
 
-class tcp_server(tcp_tools):
+class TcpServer(TcpTools):
+    """Tcp server class."""
+
     def __init__(self):
         self.resource_path = "resources"
         super().__init__()
 
     def recieveData(self):
+        """Receive tcp data."""
         assert self.connection, "No socket available."
         try:
             data = self.connection.recv(self.server_data["buffer"])
@@ -143,6 +162,7 @@ class tcp_server(tcp_tools):
         return data
 
     def sendData(self, data):
+        """Send tcp data."""
         assert self.connection, "No socket available."
         if isinstance(data, str):
             data = str.encode(data)
@@ -151,6 +171,7 @@ class tcp_server(tcp_tools):
         self.msg_sent += 1
 
     def receiveFile(self):
+        """Recieve a file."""
         # Listen for incoming datagrams
         message = None
         data = b""
@@ -182,5 +203,6 @@ class tcp_server(tcp_tools):
         self.file_name = None
 
     def close(self):
+        """Close tcp connection."""
         self.connection.close()
         self.TCPSocket.close()
