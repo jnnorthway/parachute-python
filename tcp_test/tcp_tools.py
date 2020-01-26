@@ -3,6 +3,7 @@ import os
 import socket
 import sys
 import time
+import urllib.request
 
 
 class TcpTools:
@@ -15,10 +16,7 @@ class TcpTools:
         self.max_attempts = 3
         self.encoding = "utf-8"
         self.server_data = {
-            # "address": ("192.168.56.1", 20001),
-            # "address": ("127.0.0.1", 20001),
-            "address": ("10.0.0.3", 20001),
-            # "buffer": 8192
+            "address": (None, 20001),
             "buffer": 1024,
         }
         self.TCPSocket = None
@@ -54,6 +52,10 @@ class TcpTools:
             buffer += " "
         buffer += "\r"
         sys.stdout.write(buffer)
+
+    def set_ip(self, ip):
+        """Set server ip address"""
+        self.server_data["address"] = (ip, self.server_data["address"][1])
 
     def createTcpSocket(self):
         """Create tcp socket."""
@@ -149,6 +151,11 @@ class TcpServer(TcpTools):
     def __init__(self):
         self.resource_path = "resources"
         super().__init__()
+        self.getIp()
+
+    def getIp(self):
+        external_ip = urllib.request.urlopen('https://ident.me').read().decode('utf8')
+        print("External Address: %s:%s" % (external_ip, self.server_data['address'][1]))
 
     def recieveData(self):
         """Receive tcp data."""
@@ -175,6 +182,10 @@ class TcpServer(TcpTools):
         # Listen for incoming datagrams
         message = None
         data = b""
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        self.set_ip(s.getsockname()[0])
+        s.close()
         self.TCPSocket.bind(self.server_data["address"])
         self.TCPSocket.listen(1)
         print("Server listening on: %s:%s" % self.server_data["address"])
