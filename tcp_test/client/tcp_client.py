@@ -9,7 +9,10 @@ FILE = "resources/bird.jpg"
 # FILE = 'resources/tb1.pdf'
 
 def get_address():
-    ip = input("Address: ")
+    if len(sys.argv) > 1:
+        ip = sys.argv[1]
+    else:
+        ip = input("Address: ")
     return ip
 
 def tcp_client_test():
