@@ -5,8 +5,8 @@ sys.path.append(os.path.abspath(".."))
 from tcp_tools import TcpClient
 
 FILE = "resources/clientdata.txt"
-FILE = "resources/bird.jpg"
-# FILE = 'resources/tb1.pdf'
+FILE = "resources/test.jpg"
+#FILE = 'resources/simpleTest.txt'
 
 def get_address():
     if len(sys.argv) > 1:
