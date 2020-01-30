@@ -123,9 +123,9 @@ class TcpClient(TcpTools):
         self.createTcpSocket()
         self.TCPSocket.connect(self.server_data["address"])
         print("sending file: %s" % self.file)
-        self.sendData(self.file_name + self.decode(self.EOF_MSG))
+        self.sendData(self.file_name)
         self.recieveData()
-        self.sendData(str(self.file_size) + self.decode(self.EOF_MSG))
+        self.sendData(self.file_size)
         self.recieveData()
         f = open(self.file, "rb")
         data = f.read(self.server_data["buffer"])
@@ -195,12 +195,12 @@ class TcpServer(TcpTools):
         while True:
             message = self.recieveData()
             if self.file is None:
-                self.file = os.path.join(self.resource_path, self.decode(message).strip(self.decode(self.EOF_MSG)))
+                self.file = os.path.join(self.resource_path, self.decode(message))
                 start_time = time.time()
                 self.sendData(self.ACK_MSG)
                 print("receiving file: %s" % self.file)
             elif self.file_size == 0:
-                self.file_size = int(self.decode(message).strip(self.decode(self.EOF_MSG)))
+                self.file_size = int(self.decode(message))
                 self.sendData(self.ACK_MSG)
                 self.printFileInfo()
             else:
