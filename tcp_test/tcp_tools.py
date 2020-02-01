@@ -11,7 +11,6 @@ class TcpTools:
 
     def __init__(self):
         self.ACK_MSG = b"<ACK>"
-        self.EOF_MSG = b"<EOF>"
         self.timeout = 3.0
         self.max_attempts = 3
         self.encoding = "utf-8"
@@ -24,8 +23,8 @@ class TcpTools:
         self.file = None
         self.file_name = None
         self.file_size = 0
-        self.msg_sent = 0
-        self.msg_received = 0
+        self.bytes_sent = 0
+        self.bytes_received = 0
         self.progress = 0
 
     def printProgress(self):
@@ -33,8 +32,7 @@ class TcpTools:
         progress_str = "\rProgress: [%s] %s"
         columns = int(os.popen("stty size", "r").read().split()[1])
         columns -= len(progress_str)
-        size_received = self.progress * self.server_data["buffer"]
-        percentage = min(1, size_received / self.file_size)
+        percentage = min(1, self.progress / self.file_size)
         percent_buffer = ""
         for i in range(columns):
             if (percentage * columns) >= i:
@@ -102,7 +100,7 @@ class TcpClient(TcpTools):
             data = self.TCPSocket.recv(self.server_data["buffer"])
         except Exception:
             return None
-        self.msg_received += 1
+        self.bytes_received += len(data)
         return data
 
     def sendData(self, data):
@@ -114,8 +112,8 @@ class TcpClient(TcpTools):
             data = str.encode(data)
         assert isinstance(data, bytes), "data not in byte form."
         self.TCPSocket.send(data)
-        self.msg_sent += 1
-        self.progress += 1
+        self.bytes_sent += len(data)
+        self.progress = self.bytes_sent
 
     def sendFile(self):
         """Send a file."""
@@ -133,12 +131,11 @@ class TcpClient(TcpTools):
             # Send to server using created TCP connection
             self.sendData(data)
             self.printProgress()
-
-            data = f.read(self.server_data["buffer"])
-            # data = f.read(self.file_size)
+            data = f.read(self.file_size)
         f.close()
-        self.sendData(self.EOF_MSG)
         print("\nFile sent.")
+        assert self.recieveData() == self.ACK_MSG, "FILE ERROR"
+        self.close()
         print("Send time: %f" % (time.time() - start_time))
 
     def close(self):
@@ -162,11 +159,14 @@ class TcpServer(TcpTools):
         """Receive tcp data."""
         assert self.connection, "No socket available."
         try:
-            data = self.connection.recv(self.server_data["buffer"])
+            if self.file_size != 0:
+                data = self.connection.recv(self.file_size)
+            else:
+                data = self.connection.recv(self.server_data["buffer"])
         except Exception:
             return None
-        self.msg_received += 1
-        self.progress += 1
+        self.bytes_received += len(data)
+        self.progress = self.bytes_received
         return data
 
     def sendData(self, data):
@@ -176,7 +176,7 @@ class TcpServer(TcpTools):
             data = str.encode(data)
         assert isinstance(data, bytes), "data not in byte form."
         self.connection.send(data)
-        self.msg_sent += 1
+        self.bytes_received += len(data)
 
     def receiveFile(self):
         """Recieve a file."""
@@ -208,6 +208,7 @@ class TcpServer(TcpTools):
                 self.printProgress()
                 if len(data) >= self.file_size:
                     break
+        self.sendData(self.ACK_MSG)
         f = open(self.file, "wb")
         f.write(data)
         print("\nFile written: %s" % self.file)
