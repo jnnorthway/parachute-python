@@ -23,7 +23,6 @@ def tcp_client_test():
     # Create a TCP socket at client side
     client.createTcpSocket()
     client.sendFile()
-    client.close()
 
 
 def tcp_client_simple_test():
